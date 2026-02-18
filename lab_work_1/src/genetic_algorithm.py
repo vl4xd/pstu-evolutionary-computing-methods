@@ -17,7 +17,7 @@ class GeneticAlgorithm:
                  function: object):
         '''
         Docstring for __init__
-        
+
         :param self: Description
         :param population_size: Description
         :type population_size: int
@@ -50,7 +50,7 @@ class GeneticAlgorithm:
         self.history_avg: list = []
         self.history_max: list = []
         self.history_nevals: list = []
-    
+
 
     def _evaluate(self, individual):
         # individual - [float,...]
@@ -69,10 +69,10 @@ class GeneticAlgorithm:
         toolbox = base.Toolbox()
         # Регистрация функции генерации аллеля (значения гена) в промежутке [low_bound, up_bound]
         toolbox.register('attr_float', random.uniform, a=self.low_bound, b=self.up_bound)
-        toolbox.register('individual', 
-                         tools.initRepeat, 
-                         creator.Individual, 
-                         toolbox.attr_float, 
+        toolbox.register('individual',
+                         tools.initRepeat,
+                         creator.Individual,
+                         toolbox.attr_float,
                          n=self.n_dimension)
         # Генератор популяции: создаёт список особей
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -82,7 +82,7 @@ class GeneticAlgorithm:
         toolbox.register("mate", tools.cxSimulatedBinaryBounded,
                          low=self.low_bound,
                          up=self.up_bound,
-                         eta=mate_eta)        
+                         eta=mate_eta)
         toolbox.register("mutate",
                          tools.mutPolynomialBounded,
                          low=self.low_bound,

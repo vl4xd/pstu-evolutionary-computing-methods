@@ -1,0 +1,5 @@
+deap==1.4.3
+narwhals==2.16.0
+numpy==2.4.2
+packaging==26.0
+plotly==6.5.2
