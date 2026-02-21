@@ -1,5 +1,8 @@
 import numpy as np
+import sys
+from PyQt5 import QtWidgets
 
+from app.main_window import MainWindow
 from functions import rastrigin
 from genetic_algorithm import GeneticAlgorithm
 
@@ -12,6 +15,12 @@ XX, YY = np.meshgrid(x, y)
 Z = rastrigin(XX, YY)
 
 ga = GeneticAlgorithm(10, 10, 0.1, 0.1, XY_MIN, XY_MAX, 2, rastrigin)
-ga.optimise(0.1, 0.1, 0.1, 10, True)
+ga.optimise(0.1, 0.1, 0.1, 100)
 
 print(ga.history_pop)
+
+if __name__ == '__main__':
+    app = QtWidgets.QApplication([])
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec_())

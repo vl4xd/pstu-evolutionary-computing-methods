@@ -2,4 +2,11 @@ deap==1.4.3
 narwhals==2.16.0
 numpy==2.4.2
 packaging==26.0
-plotly==6.5.2
+plotly==4.14.3
+PyQt5==5.15.11
+PyQt5-Qt5==5.15.2
+PyQt5_sip==12.18.0
+PyQtWebEngine==5.15.7
+PyQtWebEngine-Qt5==5.15.2
+retrying==1.4.2
+six==1.17.0

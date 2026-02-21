@@ -61,8 +61,7 @@ class GeneticAlgorithm:
                  mate_eta: float,
                  mutate_eta: float,
                  mutate_indpb: float,
-                 tournsize: int,
-                 verbose: bool):
+                 tournsize: int):
         # Одна цель (одная целевая функция) - кортеж -1.0, (минимизация целевой функции)
         creator.create('FitnessMin', base.Fitness, weights=(-1.0,))
         creator.create('Individual', list, fitness=creator.FitnessMin)
@@ -112,11 +111,12 @@ class GeneticAlgorithm:
         fitnesses = toolbox.map(toolbox.evaluate, pop)
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
-        self.history_pop.append(copy.deepcopy(pop))
+        # self.history_pop.append(copy.deepcopy(pop))
         current_fits = [ind.fitness.values[0] for ind in pop]
-        self.history_min.append(np.min(current_fits))
-        self.history_avg.append(np.mean(current_fits))
-        self.history_max.append(np.max(current_fits))
+        # self.history_min.append(np.min(current_fits))
+        # self.history_avg.append(np.mean(current_fits))
+        # self.history_max.append(np.max(current_fits))
+        yield copy.deepcopy(pop), current_fits
         # Цикл по поколениям
         for gen in range(1, self.n_generations + 1):
             # Отбор (создаёт новую популяцию того же размера)
@@ -131,15 +131,16 @@ class GeneticAlgorithm:
             fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
             for ind, fit in zip(invalid_ind, fitnesses):
                 ind.fitness.values = fit
-            self.history_pop.append(copy.deepcopy(offspring))
+            # self.history_pop.append(copy.deepcopy(offspring))
             current_fits = [ind.fitness.values[0] for ind in offspring]
-            self.history_min.append(np.min(current_fits))
-            self.history_avg.append(np.mean(current_fits))
-            self.history_max.append(np.max(current_fits))
+            # self.history_min.append(np.min(current_fits))
+            # self.history_avg.append(np.mean(current_fits))
+            # self.history_max.append(np.max(current_fits))
+            yield copy.deepcopy(offspring), current_fits
             # Замена популяции
             pop[:] = offspring
             # Обновление hof
             hof.update(pop)
 
-            if verbose:
-                print(f"gen {gen}: min {self.history_min[-1]:}, hof {hof[0]}")
+            # if verbose:
+            #     print(f"gen {gen}: min {self.history_min[-1]:}, hof {hof[0]}")
