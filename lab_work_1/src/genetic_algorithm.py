@@ -3,6 +3,8 @@ import copy
 import numpy as np
 from deap import base, creator, tools, algorithms
 
+from functions import rastrigin
+
 
 class GeneticAlgorithm:
 
@@ -13,8 +15,8 @@ class GeneticAlgorithm:
                  mut_prob: float,
                  low_bound: float,
                  up_bound: float,
-                 n_dimension: int,
-                 function: object):
+                 a_param: int,
+                 n_dimension: int):
         '''
         Docstring for __init__
 
@@ -31,10 +33,10 @@ class GeneticAlgorithm:
         :type low_bound: float
         :param up_bound: Description
         :type up_bound: float
+        :param a_param: Description
+        :type a_param: int
         :param n_dimension: Длина хромосом особи: n_dimension=2 ([x1, x2])
         :type n_dimension: int
-        :param function: Функция для оптимизации
-        :type function: object
         '''
 
         self.population_size: int = population_size
@@ -43,8 +45,8 @@ class GeneticAlgorithm:
         self.mut_prob: float = mut_prob
         self.low_bound: float = low_bound
         self.up_bound: float = up_bound
+        self.a_param = a_param
         self.n_dimension: int = n_dimension
-        self.function = function
         self.history_pop: list = []
         self.history_min: list = []
         self.history_avg: list = []
@@ -55,7 +57,7 @@ class GeneticAlgorithm:
     def _evaluate(self, individual):
         # individual - [float,...]
         # , - возвращает кортеж
-        return self.function(*individual),
+        return rastrigin(*individual, a=self.a_param),
 
     def optimise(self,
                  mate_eta: float,
@@ -63,8 +65,10 @@ class GeneticAlgorithm:
                  mutate_indpb: float,
                  tournsize: int):
         # Одна цель (одная целевая функция) - кортеж -1.0, (минимизация целевой функции)
-        creator.create('FitnessMin', base.Fitness, weights=(-1.0,))
-        creator.create('Individual', list, fitness=creator.FitnessMin)
+        if not hasattr(creator, "FitnessMin"):
+            creator.create('FitnessMin', base.Fitness, weights=(-1.0,))
+        if not hasattr(creator, "Individual"):
+            creator.create('Individual', list, fitness=creator.FitnessMin)
         toolbox = base.Toolbox()
         # Регистрация функции генерации аллеля (значения гена) в промежутке [low_bound, up_bound]
         toolbox.register('attr_float', random.uniform, a=self.low_bound, b=self.up_bound)
@@ -116,7 +120,7 @@ class GeneticAlgorithm:
         # self.history_min.append(np.min(current_fits))
         # self.history_avg.append(np.mean(current_fits))
         # self.history_max.append(np.max(current_fits))
-        yield copy.deepcopy(pop), current_fits
+        yield 0, copy.deepcopy(pop), current_fits
         # Цикл по поколениям
         for gen in range(1, self.n_generations + 1):
             # Отбор (создаёт новую популяцию того же размера)
@@ -136,7 +140,7 @@ class GeneticAlgorithm:
             # self.history_min.append(np.min(current_fits))
             # self.history_avg.append(np.mean(current_fits))
             # self.history_max.append(np.max(current_fits))
-            yield copy.deepcopy(offspring), current_fits
+            yield gen, copy.deepcopy(offspring), current_fits
             # Замена популяции
             pop[:] = offspring
             # Обновление hof
@@ -144,3 +148,12 @@ class GeneticAlgorithm:
 
             # if verbose:
             #     print(f"gen {gen}: min {self.history_min[-1]:}, hof {hof[0]}")
+    @staticmethod
+    def get_best_from_gen(pop: list[list[float]], fits: list[float]) -> tuple[list[float], float]:
+        min_value = min(fits)
+        min_indx = fits.index(min_value)
+        return pop[min_indx], min_value
+    
+    @staticmethod
+    def get_min_avg_max(fits: list[float]) -> tuple[float, float, float]:
+        return min(fits), sum(fits)/len(fits), max(fits)

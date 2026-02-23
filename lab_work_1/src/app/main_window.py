@@ -1,9 +1,8 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 
 from interface.main_window import Ui_MainWindow
 from app.optimize_window import OptimizeWindow
 from dto import GeneticAlgorithmDTO
-from functions import rastrigin
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -13,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
         # Заполняем список доступных методов оптимизации
-        self.ui.comboBox_method.addItems(['Генетический алогоритм'])
+        self.ui.comboBox_method.addItems(['Генетический алгоритм'])
         self.ui.comboBox_method.currentIndexChanged.connect(self.on_model_changed)
         # Обрабатываем видимость полей для текущего алгоритма
         self.on_model_changed()
@@ -35,15 +34,15 @@ class MainWindow(QtWidgets.QMainWindow):
             case 0:
                 # Генетический алогоритм
                 dto = GeneticAlgorithmDTO(
-                    low_bound = self.ui.doubleSpinBox_xy.value(),
-                    up_bound = self.ui.doubleSpinBox_xy.value() * (-1),
+                    low_bound = self.ui.doubleSpinBox_xy.value() * (-1),
+                    up_bound = self.ui.doubleSpinBox_xy.value(),
+                    a_param= self.ui.spinBox_a_param.value(),
                     density = self.ui.spinBox_density.value(),
                     population_size = self.ui.spinBox_population_size.value(),
                     n_generations = self.ui.spinBox_n_generations.value(),
                     cx_prob = self.ui.doubleSpinBox_cx_prob.value(),
                     mut_prob = self.ui.doubleSpinBox_mut_prob.value(),
                     n_dimension = 2,
-                    function = rastrigin,
                     mate_eta = self.ui.doubleSpinBox_mate_eta.value(),
                     mutate_eta = self.ui.doubleSpinBox_mutate_eta.value(),
                     mutate_indpb = self.ui.doubleSpinBox_mutate_indpb.value(),

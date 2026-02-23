@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>482</width>
-    <height>489</height>
+    <width>360</width>
+    <height>370</height>
    </rect>
   </property>
   <property name="font">
@@ -105,27 +105,47 @@
         <property name="minimum">
          <double>0.100000000000000</double>
         </property>
+        <property name="maximum">
+         <double>10.240000000000000</double>
+        </property>
         <property name="value">
          <double>5.120000000000000</double>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_density">
         <property name="text">
          <string>Плотность заполнения:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QSpinBox" name="spinBox_density">
         <property name="minimum">
          <number>10</number>
         </property>
         <property name="maximum">
-         <number>290</number>
+         <number>295</number>
         </property>
         <property name="singleStep">
+         <number>5</number>
+        </property>
+        <property name="value">
+         <number>295</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_a_param">
+        <property name="text">
+         <string>Параметр А</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinBox_a_param">
+        <property name="value">
          <number>10</number>
         </property>
        </widget>
@@ -323,13 +343,13 @@
          <item row="7" column="1">
           <widget class="QSpinBox" name="spinBox_tournsize">
            <property name="minimum">
-            <number>1</number>
+            <number>2</number>
            </property>
            <property name="maximum">
             <number>1000000</number>
            </property>
            <property name="value">
-            <number>1</number>
+            <number>2</number>
            </property>
           </widget>
          </item>
