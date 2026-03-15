@@ -9,7 +9,8 @@ class Contour:
                  low_bound: float,
                  up_bound: float,
                  a_param: int,
-                 density: int):
+                 density: int,
+                 history_pop: list[list[list[float]]]):
         self.x = np.linspace(low_bound, up_bound, density)
         self.y = np.linspace(low_bound, up_bound, density)
         self.xx, self.yy = np.meshgrid(self.x, self.y)
@@ -18,15 +19,53 @@ class Contour:
         self.fig.add_trace(
             go.Contour(z=self.z, x=self.x, y=self.y, colorscale='Spectral_r')
         )
-        self.fig.add_trace(
-            go.Scatter(x=[], y=[], mode='markers', marker=dict(color='black', size=5, symbol='circle'))
-        )
-        title = 'Оптимизация функции Растригина (Популяция)'
-        self.fig.update_layout(title=title, xaxis_title='X', yaxis_title='Y')
+        for gen in range(len(history_pop)):
+            visible = True
+            if gen > 0:
+                visible = False
+            self.fig.add_trace(
+                go.Scatter(
+                    x=[ind[0] for ind in history_pop[gen]],
+                    y=[ind[1] for ind in history_pop[gen]],
+                    mode='markers',
+                    marker=dict(color='red', size=13, symbol='circle', opacity=0.7, line=dict(color='white', width=1)),
+                    visible=visible
+                )
+            )
+        steps = []
+        for gen in range(len(history_pop)):
+            # Индекс trace для данного поколения: gen+1 (0 - контур)
+            visible_traces = [False] * len(self.fig.data)
+            visible_traces[0] = True          # контур всегда видим
+            visible_traces[gen + 1] = True    # текущее поколение видимо
 
-    def update_points(self, x_points: list[float], y_points: list[float]):
-        self.fig.data[1].x = x_points
-        self.fig.data[1].y = y_points
+            step = dict(
+                method="update",
+                args=[
+                    {"visible": visible_traces},
+                    {"title": f"Поколение {gen})"}
+                ],
+                label=str(gen)  # метка на слайдере
+            )
+            steps.append(step)
+        sliders = [dict(
+            active=0,
+            currentvalue={"prefix": "Поколение: "},
+            pad={"t": 50},
+            steps=steps
+        )]
+        self.fig.update_layout(
+            title='Оптимизация функции Растригина (Популяция)', 
+            xaxis_title='X', 
+            yaxis_title='Y',
+            xaxis=dict(range=[low_bound, up_bound]),   # фиксируем диапазон X
+            yaxis=dict(range=[low_bound, up_bound]),   # фиксируем диапазон Y
+            sliders=sliders if len(history_pop) > 0 else None
+        )
+
+    # def update_points(self, x_points: list[float], y_points: list[float]):
+    #     self.fig.data[1].x = x_points
+    #     self.fig.data[1].y = y_points
 
 
 class Metrics:
@@ -58,26 +97,26 @@ class Metrics:
             ),
         )
 
-def get_contour(x: list[float],
-                y: list[float],
-                z: list[list[float]],
-                title: str) -> go.Figure:
-    fig = go.Figure(data=go.Contour(z=z, x=x, y=y, colorscale='Spectral_r'))
-    fig.update_layout(title=title, xaxis_title='X', yaxis_title='Y')
-    return fig
+# def get_contour(x: list[float],
+#                 y: list[float],
+#                 z: list[list[float]],
+#                 title: str) -> go.Figure:
+#     fig = go.Figure(data=go.Contour(z=z, x=x, y=y, colorscale='Spectral_r'))
+#     fig.update_layout(title=title, xaxis_title='X', yaxis_title='Y')
+#     return fig
 
 
-def get_surface_3d(xx: list[list[float]],
-                   yy: list[list[float]],
-                   z: list[list[float]],
-                   title: str) -> go.Figure:
-    fig = go.Figure(data=[go.Surface(z=z, x=xx, y=yy, colorscale='Spectral_r')])
-    fig.update_layout(
-        title=title,
-        scene=dict(
-            xaxis_title='X',
-            yaxis_title='Y',
-            zaxis_title='Z'
-        ),
-    )
-    return fig
+# def get_surface_3d(xx: list[list[float]],
+#                    yy: list[list[float]],
+#                    z: list[list[float]],
+#                    title: str) -> go.Figure:
+#     fig = go.Figure(data=[go.Surface(z=z, x=xx, y=yy, colorscale='Spectral_r')])
+#     fig.update_layout(
+#         title=title,
+#         scene=dict(
+#             xaxis_title='X',
+#             yaxis_title='Y',
+#             zaxis_title='Z'
+#         ),
+#     )
+#     return fig

@@ -18,7 +18,8 @@ class DTO:
             f'Параметр А: {self.a_param}',
             f'Плотность заполнения: {self.density}'
         ]
-        if in_frame: res.append(frame)
+        if in_frame:
+            res.append(frame)
         return res
 
 class GeneticAlgorithmDTO(DTO):
@@ -62,5 +63,6 @@ class GeneticAlgorithmDTO(DTO):
             f'ETA мутации: {self.mutate_eta}',
             f'Размер турнира: {self.tournsize}'
         ]
-        if in_frame: res.append(frame)
+        if in_frame:
+            res.append(frame)
         return res

@@ -1,6 +1,7 @@
+import os
 import time
 from PyQt5 import QtWidgets, QtWebEngineWidgets
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QUrl
 
 from interface.optimize_window import Ui_MainWindow
 from genetic_algorithm import GeneticAlgorithm
@@ -51,6 +52,7 @@ class OptimizeWindow(QtWidgets.QMainWindow):
         self.ui.verticalLayout_metrics.addWidget(self.browser_metrics)
 
         self.history_pop: list = []
+        self.history_fit: list = []
         self.history_min: list = []
         self.history_avg: list = []
         self.history_max: list = []
@@ -62,8 +64,17 @@ class OptimizeWindow(QtWidgets.QMainWindow):
         """Обновляет HTML в браузере по текущей фигуре"""
         metrics = Metrics(self.history_min, self.history_avg, self.history_max)
         self.browser_metrics.setHtml(metrics.fig.to_html(include_plotlyjs='https://cdn.plot.ly/plotly-2.27.0.min.js'))
-        # contour = Contour(dto.low_bound, dto.up_bound, dto.a_param, dto.density)
-        # self.browser_contour.setHtml(self.contour.fig.to_html(include_plotlyjs='cdn'))
+        
+        contour = Contour(self.dto.low_bound, self.dto.up_bound, self.dto.a_param, self.dto.density, self.history_pop) 
+        base_dir = os.path.dirname(__file__) 
+        temp_dir = os.path.join(base_dir, 'temp')
+        os.makedirs(temp_dir, exist_ok=True) 
+        unique_contour_name = f'plot_{time.time()}.html'
+        temp_path = os.path.join(temp_dir, unique_contour_name)
+        abs_temp_path = os.path.abspath(temp_path)
+        with open(temp_path, 'w', encoding='utf-8') as f:
+            f.write(contour.fig.to_html(include_plotlyjs='https://cdn.plot.ly/plotly-2.27.0.min.js'))
+        self.browser_contour.load(QUrl.fromLocalFile(abs_temp_path))
 
     def _start_algorithm_thread(self):
         if isinstance(self.dto, GeneticAlgorithmDTO):
@@ -99,7 +110,9 @@ class OptimizeWindow(QtWidgets.QMainWindow):
         # Этот метод выполняется в главном потоке, можно безопасно обновлять GUI
         best_ind, best_val = GeneticAlgorithm.get_best_from_gen(pop, fits)
         self.ui.listWidget_logs.addItem(f'№{gen} | Лучший {best_ind} = {best_val}')
+        self.ui.listWidget_logs.scrollToBottom()
         self.history_pop.append(pop)
+        self.history_fit.append(fits)
         c_min, c_avg, c_max = GeneticAlgorithm.get_min_avg_max(fits)
         self.history_min.append(c_min)
         self.history_avg.append(c_avg)
