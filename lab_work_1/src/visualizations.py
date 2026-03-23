@@ -63,10 +63,6 @@ class Contour:
             sliders=sliders if len(history_pop) > 0 else None
         )
 
-    # def update_points(self, x_points: list[float], y_points: list[float]):
-    #     self.fig.data[1].x = x_points
-    #     self.fig.data[1].y = y_points
-
 
 class Metrics:
     def __init__(self, all_min: list[float], all_avg: list[float], all_max: list[float]):
@@ -96,27 +92,3 @@ class Metrics:
                 )
             ),
         )
-
-# def get_contour(x: list[float],
-#                 y: list[float],
-#                 z: list[list[float]],
-#                 title: str) -> go.Figure:
-#     fig = go.Figure(data=go.Contour(z=z, x=x, y=y, colorscale='Spectral_r'))
-#     fig.update_layout(title=title, xaxis_title='X', yaxis_title='Y')
-#     return fig
-
-
-# def get_surface_3d(xx: list[list[float]],
-#                    yy: list[list[float]],
-#                    z: list[list[float]],
-#                    title: str) -> go.Figure:
-#     fig = go.Figure(data=[go.Surface(z=z, x=xx, y=yy, colorscale='Spectral_r')])
-#     fig.update_layout(
-#         title=title,
-#         scene=dict(
-#             xaxis_title='X',
-#             yaxis_title='Y',
-#             zaxis_title='Z'
-#         ),
-#     )
-#     return fig
