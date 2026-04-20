@@ -134,7 +134,7 @@ def run_experiment(config_file, maze_env, trial_out_dir, args=None, n_generation
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
-
+    
     # Create the population, which is the top-level object for a NEAT run.
     p = neat.Population(config)
 
@@ -181,7 +181,7 @@ def run_experiment(config_file, maze_env, trial_out_dir, args=None, n_generation
             visualize.draw_maze_records(maze_env, trialSim.record_store.records, view=False)
         else:
             visualize.draw_maze_records(maze_env, trialSim.record_store.records, 
-                                        view=True, 
+                                        view=False, 
                                         width=args.width,
                                         height=args.height,
                                         filename=os.path.join(trial_out_dir, 'maze_records.svg'))
@@ -197,8 +197,8 @@ if __name__ == '__main__':
                         help='The maze configuration to use.')
     parser.add_argument('-g', '--generations', default=500, type=int, 
                         help='The number of generations for the evolutionary process.')
-    parser.add_argument('--width', type=int, default=400, help='The width of the records subplot')
-    parser.add_argument('--height', type=int, default=400, help='The height of the records subplot')
+    parser.add_argument('--width', type=int, default=300, help='The width of the records subplot')
+    parser.add_argument('--height', type=int, default=200, help='The height of the records subplot')
     args = parser.parse_args()
 
     if not (args.maze == 'medium' or args.maze == 'hard'):

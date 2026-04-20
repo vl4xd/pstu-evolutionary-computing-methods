@@ -176,7 +176,7 @@ def draw_net(config, genome, view=False, filename=None, directory=None, node_nam
 
     return dot
 
-def draw_maze_records(maze_env, records, best_threshold=0.8, filename=None, view=False, show_axes=False, width=400, height=400, fig_height=7):
+def draw_maze_records(maze_env, records, best_threshold=0.8, filename=None, view=False, show_axes=False, width=500, height=500, fig_height=7):
     """
     The function to draw maze with recorded agents positions.
     Arguments:
@@ -244,7 +244,7 @@ def draw_maze_records(maze_env, records, best_threshold=0.8, filename=None, view
 
     # Save figure to file
     if filename is not None:
-        plt.savefig(filename)
+        plt.savefig(filename, bbox_inches='tight')
 
     if view:
         plt.show()
